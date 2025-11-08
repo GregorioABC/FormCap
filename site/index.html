@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormuCap — Crie e Gerencie Formulários</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+
+    :root {
+      --bg: #f9fbfd;
+      --fg: #2C3E50;
+      --muted: #5f7588;
+      --primary: #FF6B2C;
+      --secondary: #1ABC9C;
+      --surface: #ffffff;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: "Poppins", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: var(--surface);
+      padding: 1.5rem 1rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .logo img {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+    }
+
+    .logo h1 {
+      font-size: 1.6rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .actions a {
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: .6rem 1.2rem;
+      transition: .3s;
+    }
+
+    .actions a.secondary {
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      cursor: pointer;
+    }
+
+    .actions a.secondary:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .actions a.primary {
+      background: var(--secondary);
+      color: #fff;
+    }
+
+    .actions a.primary:hover {
+      background: #16a085;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      background: linear-gradient(135deg, rgba(255,107,44,0.1), rgba(26,188,156,0.1));
+    }
+
+    .hero h2 {
+      font-size: clamp(2.3rem, 5vw, 3.2rem);
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      max-width: 750px;
+      margin: 0 auto 2rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .hero .cta {
+      display: inline-block;
+      background: var(--secondary);
+      color: #fff;
+      font-weight: 600;
+      padding: 1rem 1.8rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: .3s;
+    }
+
+    .hero .cta:hover {
+      background: #16a085;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .section.light {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2rem;
+    }
+
+    .section .title {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .integrantes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .integrantes h3 { color: var(--fg); margin-bottom: .3rem; }
+    .integrantes p { color: var(--muted); }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    /* ========== modelo do login (cor) ========== */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+      z-index: 100;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: var(--surface);
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      width: 90%;
+      animation: fadeInUp .4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .modal form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal input {
+      padding: .8rem;
+      border-radius: var(--radius);
+      border: 1.5px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .modal button {
+      background: var(--secondary);
+      color: #fff;
+      border: none;
+      padding: .8rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .modal button:hover {
+      background: #16a085;
+    }
+
+    .modal p {
+      text-align: center;
+      font-size: .9rem;
+      margin-top: .5rem;
+      color: var(--muted);
+    }
+
+    .modal p a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav">
+      <div class="logo">
+        <img src="img/logo.png" alt="Logo FormCap">
+        <h1>FormCap</h1>
+      </div>
+      <div class="actions">
+        <a class="secondary" id="loginBtn">Login</a>
+        <a href="cadastro.html" class="primary">Criar Conta</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h2>Crie, publique e gerencie formulários com facilidade</h2>
+    <p>Com o FormCap, você constrói formulários inteligentes, coleta respostas em tempo real e transforma dados em decisões — tudo em uma plataforma moderna e intuitiva.</p>
+    <a href="#" class="cta" id="loginHeroBtn">Começar agora</a>
+  </section>
+
+  <section class="section light">
+    <div class="title"><h2>Nosso Propósito</h2></div>
+    <p style="text-align:center; max-width:800px; margin:0 auto 1.5rem;">
+      O FormCap é uma ferramenta desenvolvida para facilitar a criação de formulários interativos e acessíveis.
+      Nossa missão é simplificar a coleta de dados e promover experiências digitais mais intuitivas.
+    </p>
+  </section>
+
+  <section class="section light">
+    <div class="title"><h2>Equipe</h2></div>
+    <div class="integrantes">
+      <div><h3>Gregório Albuquerque</h3><p>Desenvolvedor Front-End</p></div>
+      <div><h3>Breno Oliveira</h3><p>UX/UI Designer</p></div>
+      <div><h3>Diogo Wanderley</h3><p>Back-End Developer</p></div>
+      <div><h3>Ivo Holanda</h3><p>Gerente de Projeto</p></div>
+      <div><h3>Mateus Cardoso</h3><p>Gerente de Projeto</p></div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 — FormCap | Criador de Formulários Inteligentes
+  </footer>
+
+
+  <!-- ========== Script Login dinamico ========== -->
+  <div class="overlay" id="loginModal">
+    <div class="modal">
+      <button class="close-btn" id="closeModal">&times;</button>
+      <h2>Entrar no FormCap</h2>
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="E-mail" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+      </form>
+      <p>Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
+    </div>
+  </div>
+
+  <script>
+    const loginBtn = document.getElementById('loginBtn');
+    const loginHeroBtn = document.getElementById('loginHeroBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+
+    loginBtn.addEventListener('click', () => {
+      loginModal.classList.add('active');
+    });
+
+    loginHeroBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginModal.classList.add('active');
+    });
+
+    closeModal.addEventListener('click', () => {
+      loginModal.classList.remove('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === loginModal) {
+        loginModal.classList.remove('active');
+      }
+    });
+
+    // Login funcional
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("email");
+      const senhaInput = document.getElementById("senha");
+
+      loginForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        const senha = senhaInput.value.trim();
+
+        if (email === "adm@teste" && senha === "123") {
+          localStorage.setItem("usuarioLogado", JSON.stringify({ nome: "Administrador", email }));
+          window.location.href = "perfil.html";
+        } else {
+          alert("E-mail ou senha incorretos!");
+        }
+      });
+    });
+  </script>
+
+</body>

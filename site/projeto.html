@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FormCap — Criação e Gestão de Formulários</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root{
+  --bg:#f9fbfd; 
+  --fg:#2C3E50; 
+  --muted:#5f7588;
+  --primary:#FF6B2C; 
+  --primary-600:#E85C21;
+  --surface:#ffffff; 
+  --ok:#1ABC9C; 
+  --radius:16px;
+  --shadow:0 10px 25px rgba(13,27,42,.12);
+}
+
+
+    body {
+      margin:0;
+      font-family:"Poppins", system-ui, sans-serif;
+      line-height:1.5;
+      color:var(--fg);
+      background:var(--bg);
+      overflow-x:hidden;
+    }
+
+    a { color:var(--primary); text-decoration:none; }
+
+    /* ===== HEADER DINÂMICO ===== */
+    header {
+      background: linear-gradient(120deg, var(--primary), var(--primary-600));
+      color: #fff;
+      text-align: center;
+      padding: 4rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      padding: .4rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      margin: 0;
+      animation: fadeInDown 1s ease forwards;
+    }
+
+    header p {
+      margin-top: .8rem;
+      font-size: 1.1rem;
+      opacity: 0.9;
+      animation: fadeInUp 1.2s ease forwards;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    nav.breadcrumb {
+      background:#eaf4ff;
+      padding:.6rem 1rem;
+    }
+
+    nav.breadcrumb ol {
+      margin:0; padding:0;
+      list-style:none;
+      display:flex; gap:.5rem; flex-wrap:wrap;
+    }
+
+    nav.breadcrumb li[aria-current="page"] { font-weight:700; }
+
+    main.wrap {
+      max-width:1100px;
+      margin:0 auto;
+      padding:clamp(1rem, 3vw, 2rem);
+      animation: fadeIn 1.2s ease;
+    }
+
+    .card {
+      background:var(--surface);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:clamp(1rem, 2vw, 1.6rem);
+      margin-bottom:1.5rem;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow:0 12px 30px rgba(13,27,42,.18);
+    }
+
+    h2 { margin:0 0 .6rem; font-size:1.5rem; }
+    h3 { margin-top:0; }
+
+    .progress {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:.5rem;
+      margin:.25rem 0 1rem;
+    }
+    .progress .step {
+      height:8px;
+      border-radius:999px;
+      background:#e0efff;
+      position: relative;
+      overflow:hidden;
+    }
+    .progress .step.done::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg, #7cc8ff, #127fbf);
+      animation: progressMove 1.6s infinite linear;
+    }
+    @keyframes progressMove {
+      from { background-position:0 0; }
+      to { background-position:100% 0; }
+    }
+
+    form { display:grid; gap:1rem; }
+    .field { display:grid; gap:.35rem; }
+    label { font-weight:600; }
+
+    input, select {
+      width:100%;
+      border:1.6px solid #cfe0ea;
+      border-radius:10px;
+      padding:.8rem .9rem;
+      font-size:1rem;
+      background:#fff;
+      transition:border .2s, box-shadow .2s;
+    }
+
+    input:focus, select:focus {
+      outline:none;
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(18,127,191,.15);
+    }
+
+    .hint { color:var(--muted); font-size:.93rem; }
+
+    .inline { display:flex; gap:.75rem; flex-wrap:wrap; }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:.85rem 1.4rem;
+      border-radius:999px;
+      border:none;
+      background:var(--primary);
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .2s, background .3s;
+      box-shadow:0 5px 15px rgba(18,127,191,.3);
+    }
+
+    .btn:hover {
+      transform:translateY(-2px);
+      background:var(--primary-600);
+    }
+
+    .btn.secondary {
+      background:#fff;
+      color:var(--primary);
+      border:1px solid #bfe6ff;
+    }
+
+    .btn.secondary:hover {
+      background:#e9f6ff;
+    }
+
+    .link-list {
+      display:flex;
+      flex-direction:column;
+      gap:.75rem;
+      padding-top:.5rem;
+    }
+
+    #enviado { display:none; border-left:6px solid var(--ok); }
+    :target#enviado { display:block; }
+
+    footer {
+      text-align:center;
+      padding:2rem;
+      font-size:.9rem;
+      color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header animado com logo -->
+  <header>
+    <div class="header-content">
+      <img src="img/logo.png" alt="Logo do FormCap" class="logo">
+      <div>
+        <h1>FormCap</h1>
+        <p>Monte, gerencie e acompanhe seus formulários de forma prática e moderna</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Você está em">
+    <ol>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="perfil.html">Perfil</a></li>
+      <li aria-current="page">Novo Projeto</li>
+    </ol>
+  </nav>
+
+  <main class="wrap">
+    <!-- Banner de sucesso -->
+    <div id="enviado" class="card">
+      <h2>Projeto criado!</h2>
+      <p class="hint">Dados enviados com sucesso. Confirmação visual sem JavaScript usando <code>:target</code>.</p>
+    </div>
+
+    <!-- CARD DO FORMULÁRIO -->
+    <div class="card">
+      <h2>Novo projeto</h2>
+      <p class="hint">Preencha os campos abaixo. Qualquer e-mail é aceito neste protótipo.</p>
+
+      <div class="progress" aria-hidden="true">
+        <div class="step done"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+        <div class="step"></div>
+      </div>
+
+      <form action="#enviado" method="get" novalidate>
+        <div class="field">
+          <label for="nome">Nome do projeto</label>
+          <input id="nome" name="nome" placeholder="Ex.: Estudo de Satisfação 2025" />
+        </div>
+
+        <div class="field">
+          <label for="tipo">Tipo de estudo realizado</label>
+          <select id="tipo" name="tipo">
+            <option value="">Selecione...</option>
+            <option>Formulário de entrevista de emprego</option>
+            <option>Formulário de petição</option>
+            <option>Formulário de registro de atendimento</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail para contato</label>
+          <input id="email" name="email" placeholder="exemplo@universidade.br" />
+          <p class="hint">Qualquer formato é aceito neste protótipo.</p>
+        </div>
+
+        <div class="inline">
+          <button type="submit" class="btn">Criar projeto</button>
+          <a class="btn secondary" href="index.html">Cancelar</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- BLOCO DOS LINKS -->
+    <div class="card">
+      <h3>Formulários disponíveis</h3>
+      <div class="link-list">
+        <a class="btn" href="entrevista.html">Formulário ENTREVISTA</a>
+        <a class="btn" href="peticao.html">Formulário PETIÇÃO</a>
+        <a class="btn" href="atendimento.html">Formulário REGISTRO DE ATENDIMENTO</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 — FormCap | Desenvolvido para fins educacionais
+  </footer>
+</body>
+</html>

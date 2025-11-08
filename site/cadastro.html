@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro — FormHub</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f9fbfd;
+      --fg: #2C3E50;
+      --muted: #5f7588;
+      --primary: #FF6B2C;
+      --secondary: #1ABC9C;
+      --surface: #ffffff;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+
+    body {
+      font-family: "Poppins", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 1.5rem 1rem;
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .logo h1 {
+      font-size: 1.6rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .voltar a {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 600;
+      border: 2px solid var(--primary);
+      padding: .6rem 1.2rem;
+      border-radius: 999px;
+      transition: .3s;
+    }
+
+    .voltar a:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input {
+      padding: .9rem;
+      border-radius: var(--radius);
+      border: 1.5px solid #ccc;
+      font-size: 1rem;
+      transition: border-color .2s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    button {
+      background: var(--secondary);
+      color: #fff;
+      border: none;
+      padding: .9rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: #16a085;
+    }
+
+    p {
+      text-align: center;
+      font-size: .9rem;
+      color: var(--muted);
+      margin-top: .5rem;
+    }
+
+    p a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: .9rem;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav">
+      <div class="logo">
+        <img src="img/logo.png" alt="Logo FormHub">
+        <h1>FormHub</h1>
+      </div>
+      <div class="voltar">
+        <a href="index.html">← Voltar</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>Crie sua conta</h2>
+      <form id="cadastroForm">
+        <input type="text" placeholder="Nome completo" required>
+        <input type="email" placeholder="E-mail" required>
+        <input type="password" placeholder="Senha" required minlength="6">
+        <input type="password" placeholder="Confirmar senha" required minlength="6">
+        <button type="submit">Cadastrar</button>
+      </form>
+      <p>Já tem uma conta? <a href="index.html" id="voltarLogin">Entrar</a></p>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 — FormHub | Crie e gerencie seus formulários com facilidade
+  </footer>
+
+  <script>
+    document.getElementById("cadastroForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      alert("Cadastro realizado com sucesso!");
+      window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>

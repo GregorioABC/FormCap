@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formulário de Petição</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root{
+  --bg:#f9fbfd; 
+  --fg:#2C3E50; 
+  --muted:#5f7588;
+  --primary:#FF6B2C; 
+  --primary-600:#E85C21;
+  --surface:#ffffff; 
+  --ok:#1ABC9C; 
+  --radius:16px;
+  --shadow:0 10px 25px rgba(13,27,42,.12);
+}
+
+    body{
+      margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height:1.5; color:var(--fg); background:var(--bg);
+    }
+
+    a{ color:var(--primary); text-decoration:none; }
+
+    /* Breadcrumb */
+    nav.breadcrumb{ background:#eaf4ff; padding:.6rem 1rem; }
+    nav.breadcrumb ol{ margin:0; padding:0; list-style:none; display:flex; gap:.5rem; flex-wrap:wrap; }
+    nav.breadcrumb li[aria-current="page"]{ font-weight:700; }
+
+    .wrap{ max-width: 1100px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem); }
+
+    .card{
+      background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding: clamp(1rem, 2.2vw, 1.6rem); margin-bottom: 1.25rem;
+    }
+
+    h1,h2{ margin:0 0 .6rem; }
+    .hint{ color:var(--muted); font-size:.93rem; }
+
+    /* Grid */
+    .grid{ display:grid; gap:1rem; grid-template-columns:repeat(12,1fr); }
+    .col-12{ grid-column:span 12; }
+    .col-8{ grid-column:span 8; }
+    .col-6{ grid-column:span 6; }
+    .col-4{ grid-column:span 4; }
+    .col-3{ grid-column:span 3; }
+    @media (max-width: 900px){
+      .col-8,.col-6,.col-4,.col-3{ grid-column:span 12; }
+    }
+
+    .section-title{
+      margin-top:.75rem; font-size:1.05rem; font-weight:700;
+      padding:.35rem .6rem; background:#f0f7ff; border-radius:10px;
+      border:1px solid #d9ebff;
+    }
+
+    label{ font-weight:600; }
+    input, select, textarea{
+      width:100%; border:1.6px solid #cfe0ea; border-radius:10px;
+      padding:.8rem .9rem; font-size:1rem; background:#fff;
+    }
+    textarea{ min-height:130px; resize:vertical; }
+
+    .inline{ display:flex; gap:.75rem; flex-wrap:wrap; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:.85rem 1.2rem; border-radius:999px; border:1px solid #bfe6ff;
+      background:var(--primary); color:#fff; font-weight:700;
+      box-shadow:var(--shadow); cursor:pointer; text-decoration:none;
+    }
+    .btn.secondary{ background:#fff; color:var(--primary); }
+
+    /* :target sucesso */
+    #enviado{ display:none; border-left:6px solid var(--ok); }
+    :target#enviado{ display:block; }
+  </style>
+</head>
+<body>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Você está em">
+    <ol>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="projeto.html">Novo Projeto</a></li>
+      <li aria-current="page">Formulário de Petição</li>
+    </ol>
+  </nav>
+
+  <main class="wrap">
+
+    <!-- Mensagem de sucesso -->
+    <div id="enviado" class="card">
+      <h2>Petição preparada!</h2>
+      <p class="hint">As informações foram registradas localmente (protótipo sem back-end). Revise e gere sua peça no editor de textos.</p>
+    </div>
+
+    <!-- Cabeçalho -->
+    <div class="card">
+      <h1>Formulário de Petição</h1>
+      <p class="hint">
+        Preencha os campos usados comumente em minutas de petição (inicial, intermediária ou contestação).
+        Campos opcionais estão indicados. Você pode adaptar depois no editor jurídico.
+      </p>
+    </div>
+
+    <!-- Formulário -->
+    <form action="#enviado" method="post" class="card" novalidate>
+
+      <!-- Dados do processo / competência -->
+      <div class="section-title">Identificação e competência</div>
+      <div class="grid">
+        <div class="col-6">
+          <label for="orgao">Órgão julgador / Vara</label>
+          <input id="orgao" name="orgao" placeholder="Ex.: 15ª Vara Federal da Seção Judiciária de PE" required />
+        </div>
+        <div class="col-3">
+          <label for="comarca">Comarca/Seção</label>
+          <input id="comarca" name="comarca" placeholder="Ex.: Recife/PE" required />
+        </div>
+        <div class="col-3">
+          <label for="classe">Classe da ação</label>
+          <select id="classe" name="classe" required>
+            <option value="">Selecione...</option>
+            <option>Ação de Cobrança</option>
+            <option>Mandado de Segurança</option>
+            <option>Ação Previdenciária</option>
+            <option>Ação Declaratória</option>
+            <option>Recurso / Agravo</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="col-4">
+          <label for="assunto">Assunto (opcional)</label>
+          <input id="assunto" name="assunto" placeholder="Ex.: Benefício assistencial (LOAS)" />
+        </div>
+        <div class="col-4">
+          <label for="rito">Rito (opcional)</label>
+          <select id="rito" name="rito">
+            <option value="">Selecione...</option>
+            <option>Ordinário</option>
+            <option>Sumário</option>
+            <option>Juizado Especial</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label for="proc">Nº do processo (se houver)</label>
+          <input id="proc" name="proc" placeholder="0000000-00.0000.0.00.0000" />
+        </div>
+      </div>
+
+      <!-- Partes -->
+      <div class="section-title">Partes</div>
+      <div class="grid">
+        <div class="col-6">
+          <label for="autor">Autor/Requerente</label>
+          <input id="autor" name="autor" required />
+        </div>
+        <div class="col-6">
+          <label for="reu">Réu/Requerido</label>
+          <input id="reu" name="reu" required />
+        </div>
+        <div class="col-4">
+          <label for="docAutor">CPF/CNPJ do Autor (opcional)</label>
+          <input id="docAutor" name="docAutor" />
+        </div>
+        <div class="col-4">
+          <label for="docReu">CPF/CNPJ do Réu (opcional)</label>
+          <input id="docReu" name="docReu" />
+        </div>
+        <div class="col-4">
+          <label for="estadoCivil">Estado civil do Autor (opcional)</label>
+          <input id="estadoCivil" name="estadoCivil" />
+        </div>
+
+        <div class="col-12">
+          <label for="endAutor">Endereço do Autor (opcional)</label>
+          <input id="endAutor" name="endAutor" autocomplete="street-address" />
+        </div>
+      </div>
+
+      <!-- Advogado -->
+      <div class="section-title">Representante legal</div>
+      <div class="grid">
+        <div class="col-6">
+          <label for="adv">Advogado</label>
+          <input id="adv" name="adv" placeholder="Nome completo" required />
+        </div>
+        <div class="col-3">
+          <label for="oab">OAB</label>
+          <input id="oab" name="oab" placeholder="Ex.: OAB/PE 12345" required />
+        </div>
+        <div class="col-3">
+          <label for="emailAdv">E-mail</label>
+          <input id="emailAdv" name="emailAdv" type="email" placeholder="adv@exemplo.com" required />
+        </div>
+        <div class="col-6">
+          <label for="endAdv">Endereço profissional (opcional)</label>
+          <input id="endAdv" name="endAdv" />
+        </div>
+        <div class="col-3">
+          <label for="telAdv">Telefone (opcional)</label>
+          <input id="telAdv" name="telAdv" inputmode="tel" />
+        </div>
+        <div class="col-3">
+          <label for="procEletronico">Processo eletrônico?</label>
+          <select id="procEletronico" name="procEletronico" required>
+            <option value="">Selecione...</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Fatos / Fundamentos / Pedidos -->
+      <div class="section-title">Fatos</div>
+      <textarea id="fatos" name="fatos" placeholder="Narre os fatos de forma objetiva..." required></textarea>
+
+      <div class="section-title">Fundamentos jurídicos</div>
+      <textarea id="fundamentos" name="fundamentos" placeholder="Fundamente o direito (leis, artigos, precedentes, jurisprudência, princípios)..." required></textarea>
+
+      <div class="section-title">Pedidos</div>
+      <textarea id="pedidos" name="pedidos" placeholder="Formule pedidos certos e determinados (condenação, obrigação de fazer/não fazer, declaração, tutela etc.)..." required></textarea>
+
+      <!-- Tutela de urgência / Provas -->
+      <div class="section-title">Tutela de urgência e provas</div>
+      <div class="grid">
+        <div class="col-3">
+          <label for="tutela">Requer tutela de urgência?</label>
+          <select id="tutela" name="tutela" required>
+            <option value="">Selecione...</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <label for="caucao">Caução (se cabível) (opcional)</label>
+          <input id="caucao" name="caucao" />
+        </div>
+        <div class="col-3">
+          <label for="audiencia">Deseja audiência de conciliação?</label>
+          <select id="audiencia" name="audiencia" required>
+            <option value="">Selecione...</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <label for="provas">Provas pretendidas</label>
+          <select id="provas" name="provas" required>
+            <option value="">Selecione...</option>
+            <option>Documental</option>
+            <option>Testemunhal</option>
+            <option>Pericial</option>
+            <option>Outras</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label for="rolDocs">Relação de documentos anexos (opcional)</label>
+          <textarea id="rolDocs" name="rolDocs" placeholder="Ex.: Procuração, RG/CPF, comprovantes, laudos, contratos..."></textarea>
+        </div>
+      </div>
+
+      <!-- Valor da causa / Justiça gratuita -->
+      <div class="section-title">Valor da causa e benefícios</div>
+      <div class="grid">
+        <div class="col-4">
+          <label for="valorCausa">Valor da causa (R$)</label>
+          <input id="valorCausa" name="valorCausa" inputmode="decimal" placeholder="Ex.: 10000,00" required />
+        </div>
+        <div class="col-4">
+          <label for="gratuita">Justiça gratuita?</label>
+          <select id="gratuita" name="gratuita" required>
+            <option value="">Selecione...</option>
+            <option>Sim</option>
+            <option>Não</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label for="prioridade">Prioridade (idoso, doença grave etc.) (opcional)</label>
+          <input id="prioridade" name="prioridade" />
+        </div>
+      </div>
+
+      <!-- LGPD / Declarações -->
+      <div class="section-title">LGPD e declarações</div>
+      <div class="grid">
+        <div class="col-12">
+          <label>
+            <input type="checkbox" name="lgpd" required style="width:auto;margin-right:.5rem;" />
+            Autorizo o tratamento dos dados pessoais para fins processuais, conforme a LGPD.
+          </label>
+        </div>
+        <div class="col-12">
+          <label>
+            <input type="checkbox" name="veracidade" required style="width:auto;margin-right:.5rem;" />
+            Declaro a veracidade das informações prestadas e a autenticidade dos documentos.
+          </label>
+        </div>
+      </div>
+
+      <!-- Fecho / Local e data / Assinatura -->
+      <div class="section-title">Fecho</div>
+      <div class="grid">
+        <div class="col-6">
+          <label for="local">Local</label>
+          <input id="local" name="local" placeholder="Ex.: Recife/PE" required />
+        </div>
+        <div class="col-6">
+          <label for="data">Data</label>
+          <input id="data" name="data" type="date" required />
+        </div>
+        <div class="col-12">
+          <label for="assinatura">Assinatura/identificação do advogado</label>
+          <textarea id="assinatura" name="assinatura" placeholder="Nome — OAB/UF nº — e-mail/telefone" required></textarea>
+        </div>
+      </div>
+
+      <div class="inline" style="margin-top:.25rem;">
+        <button type="submit" class="btn">Gerar/Salvar petição</button>
+        <a class="btn secondary" href="projeto.html">Voltar</a>
+      </div>
+    </form>
+
+  </main>
+</body>
+</html>

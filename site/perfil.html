@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil — FormCap</title>
+  <style>
+    :root {
+      --bg: #f9fbfd;
+      --fg: #2C3E50;
+      --muted: #5f7588;
+      --primary: #FF6B2C;
+      --secondary: #1ABC9C;
+      --surface: #ffffff;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    header {
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .logo h1 {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    button.sair {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      border-radius: 999px;
+      padding: .5rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    button.sair:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .perfil {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .perfil img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid var(--secondary);
+      object-fit: cover;
+    }
+
+    .perfil h2 {
+      margin-top: 1rem;
+      color: var(--primary);
+    }
+
+    .perfil p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .btn-criar {
+      background: var(--secondary);
+      color: #fff;
+      padding: .9rem 1.6rem;
+      border: none;
+      border-radius: 999px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .btn-criar:hover {
+      background: #16a085;
+    }
+
+    .lista {
+      margin-top: 2.5rem;
+      text-align: left;
+    }
+
+    .lista h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .form-item {
+      background: #f2f8ff;
+      border: 1px solid #cfe6ff;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: .2s;
+    }
+
+    .form-item:hover {
+      background: #e8f5ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="img/logo.png" alt="Logo FormCap">
+      <h1>FormCap</h1>
+    </div>
+    <button class="sair">Sair</button>
+  </header>
+
+  <main>
+    <div class="perfil">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Foto do usuário">
+      <h2 id="nomeUsuario">Usuário</h2>
+      <p id="emailUsuario">email@teste</p>
+
+      <button class="btn-criar" onclick="window.location.href='projeto.html'">+ Criar novo formulário</button>
+
+      <div class="lista">
+        <h3>Formulários criados</h3>
+        <div id="listaFormularios"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 — FormCap | Gerencie seus formulários facilmente
+  </footer>
+
+  <script>
+    // Verifica se há usuário logado
+    const user = JSON.parse(localStorage.getItem("usuarioLogado"));
+    const lista = document.getElementById("listaFormularios");
+
+    if (!user) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("nomeUsuario").textContent = user.nome;
+      document.getElementById("emailUsuario").textContent = user.email;
+    }
+
+    // Simula formulários salvos
+    const formularios = JSON.parse(localStorage.getItem("formularios")) || [
+      { titulo: "Pesquisa de Satisfação", data: "05/11/2025" },
+      { titulo: "Formulário de Registro", data: "06/11/2025" }
+    ];
+
+    formularios.forEach(f => {
+      const item = document.createElement("div");
+      item.classList.add("form-item");
+      item.innerHTML = `<strong>${f.titulo}</strong><br><small>Criado em ${f.data}</small>`;
+      lista.appendChild(item);
+    });
+
+    // Botão de sair
+    document.querySelector(".sair").addEventListener("click", () => {
+      localStorage.removeItem("usuarioLogado");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

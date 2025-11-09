@@ -64,14 +64,24 @@
       color: #fff;
     }
 
-    .perfil {
+    main {
       max-width: 900px;
       margin: 2rem auto;
       background: var(--surface);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 2rem;
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .perfil {
       text-align: center;
+      margin-bottom: 2rem;
     }
 
     .perfil img {
@@ -89,15 +99,15 @@
 
     .perfil p {
       color: var(--muted);
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .btn-criar {
       background: var(--secondary);
       color: #fff;
-      padding: .9rem 1.6rem;
       border: none;
       border-radius: 999px;
+      padding: .9rem 1.6rem;
       font-weight: 600;
       cursor: pointer;
       transition: .3s;
@@ -109,7 +119,6 @@
 
     .lista {
       margin-top: 2.5rem;
-      text-align: left;
     }
 
     .lista h3 {
@@ -124,10 +133,59 @@
       padding: 1rem;
       margin-bottom: 1rem;
       transition: .2s;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
     }
 
     .form-item:hover {
       background: #e8f5ff;
+    }
+
+    .status {
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .acoes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .btn-fechar, .btn-excluir {
+      border: none;
+      border-radius: 999px;
+      padding: .5rem .9rem;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .3s;
+      color: #fff;
+    }
+
+    .btn-fechar {
+      background: var(--primary);
+    }
+
+    .btn-fechar:hover {
+      background: #e85d23;
+    }
+
+    .btn-excluir {
+      background: #c0392b;
+    }
+
+    .btn-excluir:hover {
+      background: #a93226;
+    }
+
+    .fechado {
+      opacity: 0.7;
+      background: #fff3ed;
+      border: 1px solid #ffc3a3;
     }
 
     footer {
@@ -152,13 +210,12 @@
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Foto do usuário">
       <h2 id="nomeUsuario">Usuário</h2>
       <p id="emailUsuario">email@teste</p>
-
       <button class="btn-criar" onclick="window.location.href='projeto.html'">+ Criar novo formulário</button>
+    </div>
 
-      <div class="lista">
-        <h3>Formulários criados</h3>
-        <div id="listaFormularios"></div>
-      </div>
+    <div class="lista">
+      <h3>Formulários Criados</h3>
+      <div id="listaFormularios"></div>
     </div>
   </main>
 
@@ -167,10 +224,8 @@
   </footer>
 
   <script>
-    // Verifica se há usuário logado
+    // Verifica usuário logado
     const user = JSON.parse(localStorage.getItem("usuarioLogado"));
-    const lista = document.getElementById("listaFormularios");
-
     if (!user) {
       window.location.href = "index.html";
     } else {
@@ -178,20 +233,64 @@
       document.getElementById("emailUsuario").textContent = user.email;
     }
 
-    // Simula formulários salvos
-    const formularios = JSON.parse(localStorage.getItem("formularios")) || [
-      { titulo: "Pesquisa de Satisfação", data: "05/11/2025" },
-      { titulo: "Formulário de Registro", data: "06/11/2025" }
-    ];
+    const lista = document.getElementById("listaFormularios");
 
-    formularios.forEach(f => {
-      const item = document.createElement("div");
-      item.classList.add("form-item");
-      item.innerHTML = `<strong>${f.titulo}</strong><br><small>Criado em ${f.data}</small>`;
-      lista.appendChild(item);
-    });
+    function atualizarLista() {
+      const formularios = JSON.parse(localStorage.getItem("formularios")) || [];
+      lista.innerHTML = "";
 
-    // Botão de sair
+      if (formularios.length === 0) {
+        lista.innerHTML = `<p style="color:var(--muted);">Nenhum formulário criado ainda.</p>`;
+        return;
+      }
+
+      formularios.forEach((f, i) => {
+        const item = document.createElement("div");
+        item.classList.add("form-item");
+        if (f.status === "fechado") item.classList.add("fechado");
+
+        item.innerHTML = `
+          <strong>${f.titulo}</strong>
+          <div class="status">
+            📅 Criado em ${f.data} <br>
+            👥 Respostas: <strong>${f.respostas || 0}</strong> 
+            ${f.status === "fechado" ? "<br>🔒 Pesquisa encerrada" : ""}
+          </div>
+          <div class="acoes">
+            <button class="btn-fechar">${f.status === "fechado" ? "Reabrir" : "Fechar"} pesquisa</button>
+            <button class="btn-excluir">Excluir</button>
+          </div>
+        `;
+
+        // Fechar ou reabrir
+        item.querySelector(".btn-fechar").addEventListener("click", () => {
+          formularios[i].status = formularios[i].status === "fechado" ? "aberto" : "fechado";
+          localStorage.setItem("formularios", JSON.stringify(formularios));
+          atualizarLista();
+        });
+
+        // Excluir com verificação
+        item.querySelector(".btn-excluir").addEventListener("click", () => {
+          if (formularios[i].status !== "fechado") {
+            alert("⚠️ Você precisa fechar a pesquisa antes de excluí-la.");
+            return;
+          }
+
+          const confirmar = confirm("Tem certeza que deseja excluir esta pesquisa?");
+          if (confirmar) {
+            formularios.splice(i, 1);
+            localStorage.setItem("formularios", JSON.stringify(formularios));
+            atualizarLista();
+          }
+        });
+
+        lista.appendChild(item);
+      });
+    }
+
+    atualizarLista();
+
+    // Botão sair
     document.querySelector(".sair").addEventListener("click", () => {
       localStorage.removeItem("usuarioLogado");
       window.location.href = "index.html";

@@ -285,7 +285,7 @@
   <section class="section light">
     <div class="title"><h2>Equipe</h2></div>
     <div class="integrantes">
-      <div><h3>Gregório Albuquerque</h3><p>Desenvolvedor Front-End</p></div>
+      <div><h3>Gregório de Albuquerque</h3><p>Desenvolvedor Front-End</p></div>
       <div><h3>Breno Oliveira</h3><p>UX/UI Designer</p></div>
       <div><h3>Diogo Wanderley</h3><p>Back-End Developer</p></div>
       <div><h3>Ivo Holanda</h3><p>Gerente de Projeto</p></div>
@@ -348,10 +348,20 @@
         const email = emailInput.value.trim();
         const senha = senhaInput.value.trim();
 
+        // ✅ LOGIN DO ADMINISTRADOR
         if (email === "adm@teste" && senha === "123") {
           localStorage.setItem("usuarioLogado", JSON.stringify({ nome: "Administrador", email }));
           window.location.href = "perfil.html";
-        } else {
+        }
+
+        // ✅ LOGIN DO USUÁRIO RESPONDENTE
+        else if (email === "usuario@teste" && senha === "12345") {
+          localStorage.setItem("usuarioLogado", JSON.stringify({ nome: "Usuário", email }));
+          window.location.href = "usuario.html";
+        }
+
+        // ❌ ERRO DE LOGIN
+        else {
           alert("E-mail ou senha incorretos!");
         }
       });
@@ -359,3 +369,4 @@
   </script>
 
 </body>
+</html>

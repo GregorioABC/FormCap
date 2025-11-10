@@ -13,11 +13,9 @@ O FormCap é um projeto desenvolvido como parte da disciplina de Interação Hum
 - `index.html` — Página inicial
 - `cadastro.html` — Formulário de cadastro
 - `usuario.html` — Informações do usuário
-- `atendimento.html` — Fluxo de atendimento
-- `entrevista.html` — Página de entrevista
-- `peticao.html` — Página de petição/documento
 - `perfil.html` — Perfil do usuário
-- `projeto.html` — Descrição do projeto
+- `projeto.html` — Base do projeto
+- `responder.html` — Respostan da pesquisa
 - `img/` — Imagens e recursos estáticos
 
 > Observação: este projeto é um site estático — para visualizar basta abrir o arquivo `index.html` em um navegador.

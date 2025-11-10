@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responder Formulário — FormCap</title>
+  <style>
+    :root {
+      --bg: #f9fbfd;
+      --fg: #2C3E50;
+      --muted: #5f7588;
+      --primary: #FF6B2C;
+      --secondary: #1ABC9C;
+      --surface: #ffffff;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .logo img {
+      width: 45px;
+      height: 45px;
+    }
+
+    .logo h1 {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: var(--surface);
+      padding: 2rem 2.5rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+
+    .form-desc {
+      text-align: center;
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .field {
+      background: #f8faff;
+      border: 1px solid #dce6ef;
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: .2s;
+    }
+
+    .field:hover {
+      border-color: var(--primary);
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: .4rem;
+      color: var(--fg);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: .8rem;
+      border-radius: var(--radius);
+      border: 1.5px solid #ccd8e0;
+      font-size: 1rem;
+      transition: .2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      background: var(--secondary);
+      color: #fff;
+      font-weight: 600;
+      padding: 1rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: .3s;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: #16a085;
+    }
+
+    .msg {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 1rem;
+      font-size: .95rem;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: .3s;
+    }
+
+    .back-btn:hover {
+      color: #e35c21;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="img/logo.png" alt="Logo FormCap">
+      <h1>FormCap</h1>
+    </div>
+    <button class="back-btn" onclick="window.location.href='usuario.html'">← Voltar</button>
+  </header>
+
+  <main>
+    <h2 id="formTitulo">Responder Formulário</h2>
+    <p class="form-desc">Preencha as informações abaixo e envie suas respostas.</p>
+
+    <form id="respostaForm">
+      <div id="formConteudo"></div>
+      <button type="submit">Enviar Resposta</button>
+    </form>
+
+    <p class="msg">Obrigado por participar!</p>
+  </main>
+
+  <script>
+    const titulo = localStorage.getItem("formSelecionado");
+    const formularios = JSON.parse(localStorage.getItem("formularios")) || [];
+    const formAtual = formularios.find(f => f.titulo === titulo);
+
+    const formTitulo = document.getElementById("formTitulo");
+    const formConteudo = document.getElementById("formConteudo");
+
+    if (!formAtual) {
+      formTitulo.textContent = "Formulário não encontrado";
+      formConteudo.innerHTML = "<p>O formulário selecionado não existe ou foi removido.</p>";
+    } else {
+      formTitulo.textContent = formAtual.titulo;
+
+      // Gera layout mais bonito para cada tipo
+      switch (formAtual.tipo) {
+        case "entrevista":
+          formConteudo.innerHTML = `
+            <div class="field">
+              <label>Nome completo</label>
+              <input type="text" required placeholder="Digite seu nome completo">
+            </div>
+            <div class="field">
+              <label>Experiência anterior</label>
+              <textarea required placeholder="Descreva suas experiências anteriores"></textarea>
+            </div>
+            <div class="field">
+              <label>Por que deseja trabalhar conosco?</label>
+              <textarea required placeholder="Explique seu interesse na vaga"></textarea>
+            </div>
+          `;
+          break;
+
+        case "peticao":
+          formConteudo.innerHTML = `
+            <div class="field">
+              <label>Nome do solicitante</label>
+              <input required placeholder="Digite seu nome">
+            </div>
+            <div class="field">
+              <label>Descrição do pedido</label>
+              <textarea required placeholder="Detalhe o motivo da petição"></textarea>
+            </div>
+          `;
+          break;
+
+        case "atendimento":
+          formConteudo.innerHTML = `
+            <div class="field">
+              <label>Nome do paciente</label>
+              <input required placeholder="Digite o nome do paciente">
+            </div>
+            <div class="field">
+              <label>Relato do atendimento</label>
+              <textarea required placeholder="Descreva o atendimento realizado"></textarea>
+            </div>
+          `;
+          break;
+
+        case "avaliacao":
+          formConteudo.innerHTML = `
+            <div class="field">
+              <p><strong>Produto:</strong> ${formAtual.produto?.nome || "Produto sem nome"}</p>
+            </div>
+            <div class="field">
+              <label>Nota (1 a 5)</label>
+              <select required>
+                <option value="">Selecione</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Comentário</label>
+              <textarea placeholder="Deixe seu feedback sobre o produto"></textarea>
+            </div>
+          `;
+          break;
+
+        default:
+          formConteudo.innerHTML = `
+            <div class="field">
+              <label>Resposta</label>
+              <textarea required placeholder="Digite sua resposta aqui"></textarea>
+            </div>
+          `;
+      }
+    }
+
+    // Envio da resposta
+    document.getElementById("respostaForm").addEventListener("submit", e => {
+      e.preventDefault();
+
+      if (formAtual) {
+        formAtual.respostas = (formAtual.respostas || 0) + 1;
+        if (formAtual.respostas >= formAtual.maximo) {
+          formAtual.status = "fechado";
+        }
+
+        const atualizados = formularios.map(f => f.titulo === formAtual.titulo ? formAtual : f);
+        localStorage.setItem("formularios", JSON.stringify(atualizados));
+
+        alert("Resposta enviada com sucesso!");
+        window.location.href = "usuario.html";
+      }
+    });
+  </script>
+
+</body>
+</html>
